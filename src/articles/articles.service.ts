@@ -1,47 +1,55 @@
+import { CreateArticleInput } from './create-article.input';
 import { ArticlesQuery } from './article.query';
 import { Injectable } from '@nestjs/common';
-import {Article} from './article'
 import { UpdateArticleInput } from './update-article.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Article } from './article.entity';
 
 @Injectable()
 export class ArticlesService {
-    artitcles : Article[] = [
-        {id : '1', title : 'Title#1' , body : 'Body#1'},
-        {id : '2', title : 'Title#2', body : 'Body#2'},
-        {id : '3', title : 'Title#3', body : 'Body#3'},
-        {id : '4', title : 'Title#4', body : 'Body#4'},
-        {id : '5', title : 'Title5', body : 'Body#5'}
+    // artitcles : Article[] = [
+    //     {id : '1', title : 'Title#1' , body : 'Body#1'},
+    //     {id : '2', title : 'Title#2', body : 'Body#2'},
+    //     {id : '3', title : 'Title#3', body : 'Body#3'},
+    //     {id : '4', title : 'Title#4', body : 'Body#4'},
+    //     {id : '5', title : 'Title5', body : 'Body#5'}
         
-    ]
-    findAll():Article[]{
-        return this.artitcles
+    // ]
+    constructor(
+        @InjectRepository(Article) 
+        private articlesRepository: Repository<Article>
+        ){}
+    findAll(){
+        return this.articlesRepository.find();
     }
 
-    findAllWithQuery(query : ArticlesQuery):Article[]{
+    findAllWithQuery(query : ArticlesQuery){
         console.log(query.title)
-        return this.artitcles.filter(article => article.title === query.title)
+        return this.articlesRepository.find(query);
     }
 
-    findOne(id : string ):Article{
-        return this.artitcles.find(articles => articles.id === id)
+    findOne(id : string ){
+        return this.articlesRepository.findOne(id)
     }
 
-    create(input):Article{
-        const article = {...input , id : +new Date()}
-        this.artitcles.push(article)
-        return article
+    create(input : CreateArticleInput){
+        // const article = new Article()
+        // article.title = input.title
+        // article.body = input.body
+        const article = this.articlesRepository.create(input)
+        return this.articlesRepository.save(article)
+        
     }
 
-    update(id : string ,body: UpdateArticleInput):Article{
-        const article = this.artitcles.find(article => article.id ===id)
-        // article.body
-        for(let key in body){
-            article[key] = body[key]
-        }
-        return article
+    async update(id : string ,input: UpdateArticleInput){
+        let article = await this.articlesRepository.findOne(id)
+        article = this.articlesRepository.merge(article,input)
+        return this.articlesRepository.save(article)
     }
-    delete(id:string ):void{
-        this.artitcles = this.artitcles.filter(article => article.id !== id)
+    delete(id:string ){
+        // this.artitcles = this.artitcles.filter(article => article.id !== id)
+        return this.articlesRepository.delete(id)
     }
 }
  

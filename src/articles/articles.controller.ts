@@ -39,6 +39,6 @@ export class ArticlesController {
     @HttpCode(HttpStatus.NO_CONTENT)
     // @HttpCode(204)
     delete(@Param('id') id:string){
-        this.articlesService.delete(id)
+       return this.articlesService.delete(id)
     }
 }
