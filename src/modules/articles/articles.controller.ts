@@ -26,7 +26,7 @@ export class ArticlesController {
     return this.articlesService.findAll();
   }
 
-  @Get("/a")
+  @Get("/")
   findAllA(@Query() query: ArticlesQuery) {
     return this.articlesService.findAllWithQuery(query);
   }
