@@ -23,10 +23,10 @@ export class Doctor {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(
-    type => Patient,
-    patient => patient.articles
-  )
-  @JoinTable()
-  categories: Category[];
+  // @ManyToMany(
+  //   type => Patient,
+  //   patient => patient.articles
+  // )
+  // @JoinTable()
+  // categories: Category[];
 }

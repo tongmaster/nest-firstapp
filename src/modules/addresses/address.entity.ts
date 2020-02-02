@@ -4,21 +4,20 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     Column,
-    OneToOne,
-    JoinColumn
+    OneToOne
   } from 'typeorm';
-  import { Address } from 'src/addresses/address.entity';
+  import { User } from 'src/modules/users/user.entity';
   
   @Entity()
-  export class User {
+  export class Address {
     @PrimaryGeneratedColumn()
     id: number;
   
     @Column()
-    email: string;
+    lat: string;
   
     @Column()
-    password: string;
+    lng: string;
   
     @CreateDateColumn()
     createdAt: Date;
@@ -26,15 +25,10 @@ import {
     @UpdateDateColumn()
     updatedAt: Date;
   
-    @Column({ nullable: true })
-    addressId: number;
-  
     @OneToOne(
-      type => Address,
-      address => address.user,
-      { cascade: true }
+      type => User,
+      user => user.address
     )
-    @JoinColumn()
-    address: Address;
+    user: User;
   }
   
