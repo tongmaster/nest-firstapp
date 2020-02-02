@@ -33,4 +33,11 @@ export class Article {
     comment => comment.article
   )
   comments: Comment[];
+
+  @ManyToMany(
+    type => Category,
+    category => category.articles
+  )
+  @JoinTable()
+  categories: Category[];
 }
